@@ -1,0 +1,1 @@
+# prices-manager-frontend
