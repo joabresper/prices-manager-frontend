@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard de Productos</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    .search-bar {
+      margin: 10px 0 20px;
+    }
+
+    input[type="text"] {
+      padding: 8px;
+      width: 100%;
+      max-width: 400px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .product {
+      background: white;
+      padding: 10px;
+      margin-bottom: 8px;
+      border-radius: 6px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+      font-size: 14px;
+    }
+
+    .product h2 {
+      margin: 0 0 4px;
+      font-size: 16px;
+    }
+
+    .product p {
+      margin: 2px 0;
+    }
+
+    .price {
+      font-weight: bold;
+      color: #009688;
+    }
+  </style>
+</head>
+<body>
+  <nav style="background-color: #d8c9aa; color: white; padding: 1rem; display: flex; justify-content: space-between; align-items: center;">
+    <div><strong>Gestor de precios</strong></div>
+    <div>
+      <button onclick="window.location.href='productnew.html'" style="margin-right: 1rem;">Agregar Producto</button>
+      <button onclick="logout()">Salir</button>
+    </div>
+  </nav>
+
+  <script>
+    function logout() {
+      localStorage.removeItem('token'); // Elimina el token del almacenamiento local
+      window.location.href = 'login.html'; // Redirige al login
+    }
+  </script>
+  <h1>Lista de Productos</h1>
+  <div class="search-bar" style="margin-bottom: 20px;">
+    <input type="text" id="searchInput" placeholder="Buscar producto por nombre..." />
+  </div>
+
+  <table id="productsTable" border="1" cellspacing="0" cellpadding="8" style="width: 100%; text-align: left;">
+    <thead>
+      <tr>
+        <th style="width: 30%;">Nombre</th>
+        <th style="width: 50%;">Descripción</th>
+        <th style="width: 20%;">Precio</th>
+      </tr>
+    </thead>
+    <tbody id="product-list">
+      <!-- Productos aquí -->
+    </tbody>
+  </table>
+
+  <script>
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      alert('No estás autenticado. Redirigiendo al login...');
+      window.location.href = 'login.html';
+    }
+
+    const productList = document.getElementById('product-list');
+    const searchInput = document.getElementById('searchInput');
+
+    function renderProducts(products) {
+      productList.innerHTML = '';
+      products.forEach(product => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${product.name}</td>
+          <td>${product.description}</td>
+          <td>$${product.price}</td>
+        `;
+        productList.appendChild(row);
+      });
+    }
+
+    function fetchProducts(url) {
+      fetch(url, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      })
+      .then(res => {
+        if (!res.ok) throw new Error('No se pudieron obtener los productos');
+        return res.json();
+      })
+      .then(renderProducts)
+      .catch(err => {
+        console.error(err);
+        alert('Error al cargar productos: ' + err.message);
+      });
+    }
+
+    // Inicial: carga todos
+    fetchProducts('http://localhost:3000/products');
+
+    // Búsqueda en tiempo real
+    searchInput.addEventListener('input', () => {
+      const query = searchInput.value.trim();
+      if (query === '') {
+        fetchProducts('http://localhost:3000/products');
+      } else {
+        fetchProducts(`http://localhost:3000/products/search?name=${encodeURIComponent(query)}`);
+      }
+    });
+  </script>
+</body>
+</html>

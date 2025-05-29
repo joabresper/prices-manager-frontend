@@ -43,10 +43,8 @@
 
         const data = await res.json();
         console.log('Token JWT:', data.accessToken);
-        alert('Login exitoso');
-
-        // Podés guardar el token si querés usarlo luego
-        // localStorage.setItem('token', data.accessToken);
+        localStorage.setItem('token', data.accessToken);
+        window.location.href = 'products.html';
 
       } catch (err) {
         alert('Error al conectar con el servidor');

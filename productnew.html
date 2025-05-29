@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Agregar Producto</title>
+</head>
+<body>
+  <!-- NAVBAR SUPERIOR -->
+  <nav style="background-color: #d8c9aa; color: white; padding: 1rem; display: flex; justify-content: space-between; align-items: center;">
+    <div><strong>Gestor de precios</strong></div>
+    <div>
+      <button onclick="window.location.href='products.html'" style="margin-right: 1rem;">Volver a Productos</button>
+      <button onclick="logout()">Salir</button>
+    </div>
+  </nav>
+
+  <!-- FORMULARIO -->
+  <div style="padding: 2rem;">
+    <h2>Agregar Nuevo Producto</h2>
+    <form id="productForm">
+      <label for="name">Nombre (obligatorio):</label><br />
+      <input type="text" id="name" name="name" required /><br /><br />
+
+      <label for="description">Descripción:</label><br />
+      <textarea id="description" name="description"></textarea><br /><br />
+
+      <label for="price">Precio (obligatorio):</label><br />
+      <input type="number" id="price" name="price" required step="0.01" /><br /><br />
+
+      <button type="submit">Agregar</button>
+    </form>
+  </div>
+
+  <script>
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('No estás autenticado. Redirigiendo al login...');
+      window.location.href = 'login.html';
+    }
+
+    function logout() {
+      localStorage.removeItem('token');
+      window.location.href = 'login.html';
+    }
+
+    const form = document.getElementById('productForm');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById('name').value.trim();
+      const description = document.getElementById('description').value.trim();
+      const price = document.getElementById('price').value;
+
+      if (!name || !price) {
+        alert('Nombre y precio son obligatorios');
+        return;
+      }
+
+      try {
+        const response = await fetch('http://localhost:3000/products', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            name,
+            description,
+            price: parseFloat(price)
+          })
+        });
+
+        if (!response.ok) throw new Error('No se pudo agregar el producto');
+
+        alert('Producto agregado correctamente');
+        form.reset(); // Limpia el formulario
+      } catch (error) {
+        alert('Error: ' + error.message);
+      }
+    });
+  </script>
+</body>
+</html>
