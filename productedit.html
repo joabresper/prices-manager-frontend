@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Editar Producto</title>
+  <script src="config.js"></script>
+</head>
+<body>
+  <!-- NAVBAR -->
+  <nav style="background: #d8c9aa; color: white; padding: 1rem; display: flex; justify-content: space-between;">
+    <div><strong>Editar Producto</strong></div>
+    <div>
+      <button onclick="window.location.href='products.html'" style="margin-right: 1rem;">Volver</button>
+      <button onclick="logout()">Salir</button>
+    </div>
+  </nav>
+
+  <!-- FORMULARIO -->
+  <div style="padding: 2rem;">
+    <form id="editProductForm">
+      <label for="name">Nombre:</label><br />
+      <input type="text" id="name" name="name" required /><br /><br />
+
+      <label for="description">Descripción:</label><br />
+      <textarea id="description" name="description"></textarea><br /><br />
+
+      <label for="price">Precio:</label><br />
+      <input type="text" id="price" name="price" required /><br /><br />
+
+      <label for="discount">Descuento (0 a 1):</label><br />
+      <input type="text" id="discount" name="discount" /><br /><br />
+
+      <button type="submit">Guardar Cambios</button>
+    </form>
+  </div>
+
+  <script>
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('No estás autenticado. Redirigiendo al login...');
+      window.location.href = 'index.html';
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = urlParams.get('id');
+    const form = document.getElementById('editProductForm');
+
+    if (!productId) {
+      alert('ID de producto no especificado');
+      window.location.href = 'products.html';
+    }
+
+    // Cargar datos del producto
+    fetch(`${BASE_URL}/products/${productId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    .then(res => res.json())
+    .then(product => {
+      document.getElementById('name').value = product.name;
+      document.getElementById('description').value = product.description || '';
+      document.getElementById('price').value = product.price;
+      document.getElementById('discount').value = product.discount || '';
+    })
+    .catch(err => {
+      console.error(err);
+      alert('Error al cargar el producto');
+    });
+
+    // Actualizar producto
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const price = parseFloat(form.price.value.replace(',', '.'));
+      const discount = parseFloat(form.discount.value.replace(',', '.')) || 0;
+
+      const updatedProduct = {
+        name: form.name.value.trim(),
+        description: form.description.value.trim(),
+        price,
+        discount,
+      };
+
+      fetch(`${BASE_URL}/products/${productId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(updatedProduct),
+      })
+      .then(res => {
+        if (!res.ok) throw new Error('No se pudo actualizar el producto');
+        alert('Producto actualizado correctamente');
+        window.location.href = 'products.html';
+      })
+      .catch(err => {
+        console.error(err);
+        alert('Error al actualizar el producto: ' + err.message);
+      });
+    });
+
+    function logout() {
+      localStorage.removeItem('token');
+      window.location.href = 'login.html';
+    }
+  </script>
+</body>
+</html>

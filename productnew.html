@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <title>Agregar Producto</title>
+  <script src="config.js"></script>
 </head>
 <body>
   <!-- NAVBAR SUPERIOR -->
   <nav style="background-color: #d8c9aa; color: white; padding: 1rem; display: flex; justify-content: space-between; align-items: center;">
-    <div><strong>Gestor de precios</strong></div>
+    <div><strong>Nuevo Producto</strong></div>
     <div>
       <button onclick="window.location.href='products.html'" style="margin-right: 1rem;">Volver a Productos</button>
       <button onclick="logout()">Salir</button>
@@ -27,9 +28,13 @@
       <label for="price">Precio (obligatorio):</label><br />
       <input type="number" id="price" name="price" required step="0.01" /><br /><br />
 
+      <label for="discount">Descuento (opcional, entre 0 y 1):</label><br />
+      <input type="number" id="discount" name="discount" step="0.01" min="0" max="1" /><br /><br />
+
       <button type="submit">Agregar</button>
     </form>
   </div>
+
 
   <script>
     const token = localStorage.getItem('token');
@@ -49,25 +54,38 @@
 
       const name = document.getElementById('name').value.trim();
       const description = document.getElementById('description').value.trim();
-      const price = document.getElementById('price').value;
+      const priceInput = document.getElementById('price').value.trim();
+      const discountInput = document.getElementById('discount').value.trim();
+
+      // Reemplaza coma por punto y convierte a número
+      const price = parseFloat(priceInput.replace(',', '.'));
+      const discount = discountInput ? parseFloat(discountInput.replace(',', '.')) : 0;
+
+      if (isNaN(price) || price <= 0) {
+        alert('Precio inválido');
+        return;
+      }
+
+      if (discount < 0 || discount >= 1) {
+        alert('Descuento inválido');
+        return;
+      }
 
       if (!name || !price) {
         alert('Nombre y precio son obligatorios');
         return;
       }
 
+      const product = { name, description, price, discount };
+
       try {
-        const response = await fetch('http://localhost:3000/products', {
+        const response = await fetch(`${BASE_URL}/products`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
           },
-          body: JSON.stringify({
-            name,
-            description,
-            price: parseFloat(price)
-          })
+          body: JSON.stringify(product)
         });
 
         if (!response.ok) throw new Error('No se pudo agregar el producto');

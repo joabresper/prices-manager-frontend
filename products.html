@@ -50,6 +50,7 @@
       color: #009688;
     }
   </style>
+  <script src="config.js"></script>
 </head>
 <body>
   <nav style="background-color: #d8c9aa; color: white; padding: 1rem; display: flex; justify-content: space-between; align-items: center;">
@@ -72,17 +73,19 @@
   </div>
 
   <table id="productsTable" border="1" cellspacing="0" cellpadding="8" style="width: 100%; text-align: left;">
-    <thead>
-      <tr>
-        <th style="width: 30%;">Nombre</th>
-        <th style="width: 50%;">Descripción</th>
-        <th style="width: 20%;">Precio</th>
-      </tr>
-    </thead>
-    <tbody id="product-list">
-      <!-- Productos aquí -->
-    </tbody>
-  </table>
+  <thead>
+    <tr>
+      <th style="width: 20%;">Nombre</th>
+      <th style="width: 40%;">Descripción</th>
+      <th style="width: 10%;">Descuento</th>
+      <th style="width: 15%;">Precio</th>
+      <th style="width: 15%;">Precio Final</th>
+    </tr>
+  </thead>
+  <tbody id="product-list">
+    <!-- Productos aquí -->
+  </tbody>
+</table>
 
   <script>
     const token = localStorage.getItem('token');
@@ -96,13 +99,17 @@
     const searchInput = document.getElementById('searchInput');
 
     function renderProducts(products) {
+      products.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
       productList.innerHTML = '';
       products.forEach(product => {
         const row = document.createElement('tr');
         row.innerHTML = `
           <td>${product.name}</td>
           <td>${product.description}</td>
-          <td>$${product.price}</td>
+          <td>$${product.price.toFixed(2)}</td>
+          <td>${(product.discount * 100).toFixed(0)}%</td>
+          <td>$${(product.price * (1 - product.discount)).toFixed(2)}</td>
+          <td><button onclick="window.location.href='productedit.html?id=${product.id}'">Editar</button></td>
         `;
         productList.appendChild(row);
       });
