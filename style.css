@@ -113,6 +113,11 @@ form button[type="submit"] {
 form button[type="submit"]:hover {
 	background: #bfa77a;
 }
+#product-status {
+	margin-top: 1rem;
+	color: #666;
+	font-style: italic;
+}
 @media (max-width: 600px) {
 	nav {
 	flex-direction: column;

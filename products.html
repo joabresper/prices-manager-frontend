@@ -71,7 +71,12 @@
       });
     }
 
+    <div id="product-status"></div>
+
     function fetchProducts(url) {
+      const statusEl = document.getElementById('product-status');
+      statusEl.textContent = 'Cargando productos...';
+
       fetch(url, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -81,11 +86,16 @@
         if (!res.ok) throw new Error('No se pudieron obtener los productos');
         return res.json();
       })
-      .then(renderProducts)
+      .then(data => {
+        renderProducts(data);
+        statusEl.textContent = ''; // Limpia el mensaje si todo sale bien
+      })
       .catch(err => {
         console.error(err);
+        statusEl.textContent = 'No se pudieron cargar los productos.';
       });
     }
+
 
     fetchProducts(`${BASE_URL}/products`);
 
