@@ -121,7 +121,7 @@ form button[type="submit"]:hover {
 	width: 100%;
 	}
 }
-input[type="text"] {
+input[type="text"], input[type="email"], input[type="password"] {
 	padding: 10px;
 	width: 100%;
 	max-width: 400px;
