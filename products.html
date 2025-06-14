@@ -7,53 +7,119 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      padding: 20px;
+      padding: 0;
+      margin: 0;
       background-color: #f4f4f4;
+    }
+
+    nav {
+      background-color: #d8c9aa;
+      color: #333;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    }
+
+    nav button {
+      background: #009688;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 16px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+    nav button:hover {
+      background: #00796b;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 32px auto;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      padding: 32px 24px 24px 24px;
     }
 
     h1 {
       color: #333;
+      margin-top: 0;
+      margin-bottom: 24px;
+      font-size: 2rem;
+      font-weight: 600;
     }
 
     .search-bar {
-      margin: 10px 0 20px;
+      margin-bottom: 24px;
     }
 
     input[type="text"] {
-      padding: 8px;
+      padding: 10px;
       width: 100%;
       max-width: 400px;
       border: 1px solid #ccc;
       border-radius: 4px;
+      font-size: 15px;
+      box-sizing: border-box;
+      margin-bottom: 0;
     }
 
-    .product {
-      background: white;
-      padding: 10px;
-      margin-bottom: 8px;
-      border-radius: 6px;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-      font-size: 14px;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
     }
 
-    .product h2 {
-      margin: 0 0 4px;
-      font-size: 16px;
+    th, td {
+      padding: 12px 10px;
+      text-align: left;
     }
 
-    .product p {
-      margin: 2px 0;
+    thead {
+      background: #f7f2e7;
+      color: #333;
+      font-weight: 600;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid #eee;
+      transition: background 0.15s;
+    }
+
+    tbody tr:hover {
+      background: #f1f7fa;
     }
 
     .price {
       font-weight: bold;
       color: #009688;
     }
+
+    .edit-btn {
+      background: #ffc107;
+      color: #333;
+      border: none;
+      border-radius: 4px;
+      padding: 6px 14px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: background 0.2s;
+    }
+    .edit-btn:hover {
+      background: #e0a800;
+    }
   </style>
   <script src="config.js"></script>
 </head>
 <body>
-  <nav style="background-color: #d8c9aa; color: white; padding: 1rem; display: flex; justify-content: space-between; align-items: center;">
+  <nav>
     <div><strong>Gestor de precios</strong></div>
     <div>
       <button onclick="window.location.href='productnew.html'" style="margin-right: 1rem;">Agregar Producto</button>
@@ -61,35 +127,36 @@
     </div>
   </nav>
 
-  <script>
-    function logout() {
-      localStorage.removeItem('token'); // Elimina el token del almacenamiento local
-      window.location.href = 'login.html'; // Redirige al login
-    }
-  </script>
-  <h1>Lista de Productos</h1>
-  <div class="search-bar" style="margin-bottom: 20px;">
-    <input type="text" id="searchInput" placeholder="Buscar producto por nombre..." />
+  <div class="container">
+    <h1>Lista de Productos</h1>
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Buscar producto por nombre..." />
+    </div>
+
+    <table id="productsTable">
+      <thead>
+        <tr>
+          <th style="width: 20%;">Nombre</th>
+          <th style="width: 40%;">Descripción</th>
+          <th style="width: 10%;">Descuento</th>
+          <th style="width: 15%;">Precio</th>
+          <th style="width: 15%;">Precio Final</th>
+          <th style="width: 10%;">Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="product-list">
+        <!-- Productos aquí -->
+      </tbody>
+    </table>
   </div>
 
-  <table id="productsTable" border="1" cellspacing="0" cellpadding="8" style="width: 100%; text-align: left;">
-  <thead>
-    <tr>
-      <th style="width: 20%;">Nombre</th>
-      <th style="width: 40%;">Descripción</th>
-      <th style="width: 10%;">Descuento</th>
-      <th style="width: 15%;">Precio</th>
-      <th style="width: 15%;">Precio Final</th>
-    </tr>
-  </thead>
-  <tbody id="product-list">
-    <!-- Productos aquí -->
-  </tbody>
-</table>
-
   <script>
-    const token = localStorage.getItem('token');
+    function logout() {
+      localStorage.removeItem('token');
+      window.location.href = 'login.html';
+    }
 
+    const token = localStorage.getItem('token');
     if (!token) {
       alert('No estás autenticado. Redirigiendo al login...');
       window.location.href = 'login.html';
@@ -106,10 +173,10 @@
         row.innerHTML = `
           <td>${product.name}</td>
           <td>${product.description}</td>
-          <td>$${product.price.toFixed(2)}</td>
           <td>${(product.discount * 100).toFixed(0)}%</td>
-          <td>$${(product.price * (1 - product.discount)).toFixed(2)}</td>
-          <td><button onclick="window.location.href='productedit.html?id=${product.id}'">Editar</button></td>
+          <td class="price">$${product.price.toFixed(2)}</td>
+          <td class="price">$${(product.price * (1 - product.discount)).toFixed(2)}</td>
+          <td><button class="edit-btn" onclick="window.location.href='productedit.html?id=${product.id}'">Editar</button></td>
         `;
         productList.appendChild(row);
       });
@@ -131,10 +198,8 @@
       });
     }
 
-    // Inicial: carga todos
     fetchProducts(`${BASE_URL}/products`);
 
-    // Búsqueda en tiempo real
     searchInput.addEventListener('input', () => {
       const query = searchInput.value.trim();
       if (query === '') {
