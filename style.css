@@ -188,6 +188,7 @@ tbody tr:hover {
 .edit-btn:hover {
 	background: #e0a800;
 }
+
 @media screen and (max-width: 768px) {
   table, thead, tbody, th, td, tr {
     display: block;
@@ -199,33 +200,49 @@ tbody tr:hover {
   }
 
   tr {
-    margin-bottom: 1rem;
-    background: #fff;
+    margin-bottom: 1.5rem;
+    background: #f9f9f9;
     border: 1px solid #ddd;
-    border-radius: 6px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    padding: 0.5rem;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.04);
   }
 
   td {
     display: flex;
     justify-content: space-between;
-    padding: 10px 0;
+    padding: 8px 0;
     border-bottom: 1px solid #eee;
-    font-size: 14px;
+    font-size: 15px;
+    line-height: 1.4;
+    word-break: break-word;
   }
 
   td::before {
     content: attr(data-label);
     font-weight: bold;
-    color: #666;
+    color: #4b3f2f;
     flex: 1;
     padding-right: 1rem;
   }
 
   td:last-child {
     border-bottom: none;
+    justify-content: flex-start;
+    gap: 0.5rem;
+  }
+
+  /* Resaltar fila de nombre */
+  td[data-label="Nombre"] {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    background: #f1f1e9;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 8px;
   }
 }
+
 
 
