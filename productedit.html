@@ -3,32 +3,127 @@
 <head>
   <meta charset="UTF-8" />
   <title>Editar Producto</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <script src="config.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f7f6f3;
+      color: #333;
+    }
+    nav {
+      background: #d8c9aa;
+      color: #4b3f2f;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    nav div {
+      display: flex;
+      align-items: center;
+    }
+    nav button {
+      background: #4b3f2f;
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-left: 0.5rem;
+      font-size: 1rem;
+      transition: background 0.2s;
+    }
+    nav button:hover {
+      background: #7c6846;
+    }
+    .container {
+      max-width: 480px;
+      margin: 2rem auto;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      padding: 2rem;
+    }
+    form label {
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+      display: block;
+    }
+    form input[type="text"],
+    form textarea {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #d8c9aa;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      background: #f7f6f3;
+      box-sizing: border-box;
+      resize: vertical;
+    }
+    form textarea {
+      min-height: 60px;
+      max-height: 200px;
+    }
+    form button[type="submit"] {
+      background: #d8c9aa;
+      color: #4b3f2f;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      font-size: 1rem;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.2s;
+      margin-top: 0.5rem;
+    }
+    form button[type="submit"]:hover {
+      background: #bfa77a;
+    }
+    @media (max-width: 600px) {
+      nav {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 0.75rem;
+      }
+      .container {
+        margin: 1rem;
+        padding: 1rem;
+      }
+      nav button {
+        margin-left: 0;
+        margin-top: 0.5rem;
+      }
+    }
+  </style>
 </head>
 <body>
   <!-- NAVBAR -->
-  <nav style="background: #d8c9aa; color: white; padding: 1rem; display: flex; justify-content: space-between;">
+  <nav>
     <div><strong>Editar Producto</strong></div>
     <div>
-      <button onclick="window.location.href='products.html'" style="margin-right: 1rem;">Volver</button>
+      <button onclick="window.location.href='products.html'">Volver</button>
       <button onclick="logout()">Salir</button>
     </div>
   </nav>
 
   <!-- FORMULARIO -->
-  <div style="padding: 2rem;">
-    <form id="editProductForm">
-      <label for="name">Nombre:</label><br />
-      <input type="text" id="name" name="name" required /><br /><br />
+  <div class="container">
+    <form id="editProductForm" autocomplete="off">
+      <label for="name">Nombre:</label>
+      <input type="text" id="name" name="name" required />
 
-      <label for="description">Descripción:</label><br />
-      <textarea id="description" name="description"></textarea><br /><br />
+      <label for="description">Descripción:</label>
+      <textarea id="description" name="description"></textarea>
 
-      <label for="price">Precio:</label><br />
-      <input type="text" id="price" name="price" required /><br /><br />
+      <label for="price">Precio:</label>
+      <input type="text" id="price" name="price" required />
 
-      <label for="discount">Descuento (0 a 1):</label><br />
-      <input type="text" id="discount" name="discount" /><br /><br />
+      <label for="discount">Descuento (0 a 1):</label>
+      <input type="text" id="discount" name="discount" />
 
       <button type="submit">Guardar Cambios</button>
     </form>
