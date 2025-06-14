@@ -242,6 +242,38 @@ tbody tr:hover {
     border-radius: 6px;
     margin-bottom: 8px;
   }
+  .container-products {
+  overflow-x: hidden;
+	}
+
+	tr {
+	padding: 1rem;
+	box-sizing: border-box;
+	}
+
+	td {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	padding: 8px 0;
+	border-bottom: 1px solid #eee;
+	font-size: 15px;
+	word-break: break-word;
+	flex-wrap: wrap;
+	}
+
+	td::before {
+	content: attr(data-label);
+	font-weight: bold;
+	color: #4b3f2f;
+	flex: 0 0 40%;
+	max-width: 40%;
+	}
+
+	td span {
+	flex: 1;
+	max-width: 60%;
+	}
 }
 
 
