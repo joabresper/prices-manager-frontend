@@ -239,7 +239,7 @@ tbody tr:hover {
     color: #000000;
     background: #f1f1e9;
     border-radius: 6px;
-    margin-bottom: 8px;
+	margin: 8px -8px;
   }
   .container-products {
   overflow-x: hidden;
