@@ -60,11 +60,11 @@
       products.forEach(product => {
         const row = document.createElement('tr');
         row.innerHTML = `
-          <td>${product.name}</td>
-          <td>${product.description}</td>
-          <td>${(product.discount * 100).toFixed(0)}%</td>
-          <td class="price">$${product.price.toFixed(2)}</td>
-          <td class="price">$${(product.price * (1 - product.discount)).toFixed(2)}</td>
+          <td data-label="Nombre">${product.name}</td>
+          <td data-label="Descripción">${product.description}</td>
+          <td data-label="Descuento">${(product.discount * 100).toFixed(0)}%</td>
+          <td class="price" data-label="Precio">$${product.price.toFixed(2)}</td>
+          <td class="price" data-label="Precio Final">$${(product.price * (1 - product.discount)).toFixed(2)}</td>
           <td><button class="edit-btn" onclick="window.location.href='productedit.html?id=${product.id}'">Editar</button></td>
         `;
         productList.appendChild(row);
