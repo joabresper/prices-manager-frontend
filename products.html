@@ -128,20 +128,19 @@
       .then(renderProducts)
       .catch(err => {
         console.error(err);
-        alert('Error al cargar productos: ' + err.message);
       });
     }
 
     // Inicial: carga todos
-    fetchProducts('http://localhost:3000/products');
+    fetchProducts(`${BASE_URL}/products`);
 
     // Búsqueda en tiempo real
     searchInput.addEventListener('input', () => {
       const query = searchInput.value.trim();
       if (query === '') {
-        fetchProducts('http://localhost:3000/products');
+        fetchProducts(`${BASE_URL}/products`);
       } else {
-        fetchProducts(`http://localhost:3000/products/search?name=${encodeURIComponent(query)}`);
+        fetchProducts(`${BASE_URL}/products/search?name=${encodeURIComponent(query)}`);
       }
     });
   </script>
